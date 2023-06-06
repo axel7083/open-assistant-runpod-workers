@@ -10,7 +10,7 @@ The script in this repository allows to spawn a worker in [runpod.io](https://ww
 
 - You will need an api key from your runpod account (and some money on it. Like 5 euros is enough for testing a few hours).
 - ngrok installed on your machine
-
+- remove the inference worker in the docker compose.
 
 ### ngrok
 
@@ -22,3 +22,9 @@ ngork allows to make the bridge between your local development dockers and the w
 pip install -r requirements.txt
 python main.py --api-key={api-key}
 ````
+
+
+## TODO:
+
+- [ ] make the MODEL_CONFIG_NAME configurable (for now by default: `OA_SFT_Pythia_12Bq_4`)
+- [ ] Make the gpu requested configurable (for now by default: `NVIDIA RTX A6000`)
