@@ -12,6 +12,19 @@ The script in this repository allows to spawn a worker in [runpod.io](https://ww
 - ngrok installed on your machine
 - remove the inference worker in the docker compose.
 
+### full-demo
+
+Inside Open-Assistant repository
+
+````shell
+docker compose --profile inference build
+docker compose --profile inference up -d
+docker compose logs -f inference-server
+````
+
+Then you can use the script in this repo, you will see in the docker logs of the inference-server when your worker has joined.
+If nothing never appear, you can chekc the logs of your runpods
+
 ### ngrok
 
 ngork allows to make the bridge between your local development dockers and the workers in the runpod cloud.
