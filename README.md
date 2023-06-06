@@ -10,7 +10,7 @@ The script in this repository allows to spawn a worker in [runpod.io](https://ww
 
 - You will need an api key from your runpod account (and some money on it. Like 5 euros is enough for testing a few hours).
 - ngrok installed on your machine
-- remove the inference worker in the docker compose.
+- **remove the inference-worker in the docker compose.** 
 
 ### full-demo
 
