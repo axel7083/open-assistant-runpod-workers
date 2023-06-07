@@ -1,4 +1,3 @@
-import json
 from typing import List, Optional, Dict, Any
 import requests
 from models import GpuType, Pod
@@ -130,7 +129,7 @@ class RunpodClient:
         name: str = "RunPod Tensorflow",
         image_name: str = "runpod/tensorflow",
         docker_args: str = "",
-        ports: str = "8888/http",
+        ports: str = "8888/http,22/tcp",
         gpu_count: int = 1,
         env: Dict[str, str] = {},
         cloud_type: str = "ALL",
