@@ -31,6 +31,7 @@ For the UI:
 ````shell
 docker compose --profile ci up --build --attach-dependencies
 ````
+> **Do not forget** to change the model to OA_SFT_Pythia_12Bq_4 when using the chat.
 
 ### ngrok
 
