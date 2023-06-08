@@ -49,3 +49,11 @@ python main.py --api-key={api-key}
 
 - [ ] make the MODEL_CONFIG_NAME configurable (for now by default: `OA_SFT_Pythia_12Bq_4`)
 - [ ] Make the gpu requested configurable (for now by default: `NVIDIA RTX A6000`)
+
+
+## code-server in runpod
+
+Here is an example on how to build the code-server image
+````shell
+docker build -t docker.io/axel7083/oasst-inference-worker:v1-code-server-$(date +%s) --build-arg=BASE_IMG=docker.io/axel7083/oasst-inference-worker:v1-1686161777 -f .\code-server.Dockerfile .
+````

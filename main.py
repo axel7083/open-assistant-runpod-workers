@@ -4,6 +4,8 @@ from runpod_client import RunpodClient
 import argparse
 import logging
 from time import sleep
+from secrets import token_urlsafe
+
 
 logging.basicConfig()
 logger = logging.getLogger('runpod-worker')
@@ -25,7 +27,7 @@ def extract_connection_info(runpod: RunpodClient, pod_id: str):
                 continue
 
             for port in pod.ports:
-                if port.get('isIpPublic') == True and port.get('privatePort', 22):
+                if port.get('isIpPublic') == True and port.get('privatePort', 8888):
                     return port.get('ip'), port.get('publicPort')
 
             logger.warning(f'Cannot find ssh port: {pod.ports}.')
@@ -50,21 +52,25 @@ def main(api_key: str):
     logger.info(f"Created tunnel: {ssh_tunnel}")
     ngrok_process = ngrok.get_ngrok_process()
 
+    password = token_urlsafe(12)
     parsed = urlparse(ssh_tunnel.public_url)
     pod_id = runpod.create_pod(
-        image_name="docker.io/axel7083/oasst-inference-worker:v1-pycharm-remote-1686166474",
-        ports='22/tcp',
+        image_name="docker.io/axel7083/oasst-inference-worker:v1-code-server-1686249990",
+        ports='8888/http',
         env={
             "BACKEND_URL": f'wss://{parsed.hostname}',
-            "MODEL_CONFIG_NAME": "OA_SFT_Pythia_12Bq_4"
+            "MODEL_CONFIG_NAME": "OA_SFT_Pythia_12Bq_4",
+            "PASSWORD": password
         }
     )
 
-    logger.info(f"Pod created: {pod_id}")
+    logger.info(f"Pod created: {pod_id}. Password: {password}")
 
     try:
         ip, port = extract_connection_info(runpod, pod_id)
         logger.info(f'Pod available at {ip}:{port}')
+        logger.info(f'Accessing pod at https://{pod_id}-8888.proxy.runpod.net/ or http://{ip}:{port}/')
+
         # Block until CTRL-C or some other terminating event
         ngrok_process.proc.wait()
     except KeyboardInterrupt:
