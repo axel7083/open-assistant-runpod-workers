@@ -12,30 +12,6 @@ logger = logging.getLogger('runpod-worker')
 logger.setLevel(logging.INFO)
 
 
-def extract_connection_info(runpod: RunpodClient, pod_id: str):
-    retries = 10 * 6 * 5  # 5 minutes
-    while retries > 0:
-        retries = retries - 1
-        pods = runpod.query_pods()
-
-        for pod in pods:
-            if pod.id != pod_id:
-                continue
-
-            if pod.ports is None:
-                logger.info('ports None')
-                continue
-
-            for port in pod.ports:
-                if port.get('isIpPublic') == True and port.get('privatePort', 8888):
-                    return port.get('ip'), port.get('publicPort')
-
-            logger.warning(f'Cannot find ssh port: {pod.ports}.')
-        sleep(10)
-
-    raise Exception('Timeout')
-
-
 def clear(runpod: RunpodClient, pod_id: str, ngrok_process):
     print("Killing ngrok..")
     ngrok.kill()
@@ -67,10 +43,8 @@ def main(api_key: str):
     logger.info(f"Pod created: {pod_id}. Password: {password}")
 
     try:
-        ip, port = extract_connection_info(runpod, pod_id)
-        logger.info(f'Pod available at {ip}:{port}')
-        logger.info(f'Accessing pod at https://{pod_id}-8888.proxy.runpod.net/ or http://{ip}:{port}/')
-
+        logger.info(f'Accessing pod at https://{pod_id}-8888.proxy.runpod.net/')
+        logger.warning('The server will probably gonna take some time to boot.')
         # Block until CTRL-C or some other terminating event
         ngrok_process.proc.wait()
     except KeyboardInterrupt:

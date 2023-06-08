@@ -57,3 +57,7 @@ Here is an example on how to build the code-server image
 ````shell
 docker build -t docker.io/axel7083/oasst-inference-worker:v1-code-server-$(date +%s) --build-arg=BASE_IMG=docker.io/axel7083/oasst-inference-worker:v1-1686161777 -f .\code-server.Dockerfile .
 ````
+
+## Auth
+
+The `main.py` will generate a random secrets which will be used as password for the 
