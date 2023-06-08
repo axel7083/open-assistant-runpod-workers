@@ -203,3 +203,60 @@ class RunpodClient:
             }
         }
         self._send_request(mutation, variables)
+
+    def get_balance(self) -> float:
+        query = """
+                    query getMyself {  
+                        myself {
+                            id
+                            email
+                            machineQuota
+                            signedTermsOfService
+                            clientBalance
+                            hostBalance
+                            hostStripeLinked
+                            pubKey
+                            spendLimit
+                            currentSpendPerHr
+                            stripeSavedPaymentLast4
+                            stripeSavedPaymentId
+                            multiFactorEnabled
+                            minBalance
+                            notifyLowBalance
+                            notifyPodsStale
+                            notifyPodsGeneral
+                            notifyOther
+                            creditAlertThreshold
+                            maxServerlessConcurrency
+                            stripeAutoReloadAmount
+                            stripeAutoPaymentThreshold
+                            information {
+                              firstName
+                              lastName
+                              addressLine1
+                              addressLine2
+                              countryCode
+                              companyName
+                              companyIdentification
+                              taxIdentification
+                              __typename
+                        }
+                        containerRegistryCreds {
+                          id
+                          name
+                          __typename
+                        }
+                        apiKeys {
+                          id
+                          permissions
+                          createdAt
+                          __typename
+                        }
+                        __typename
+                      }
+                    }
+                """
+
+        response = self._send_request(query)
+        balance = response.get('data', {}).get('myself', {}).get('clientBalance', [])
+        return balance
