@@ -1,4 +1,4 @@
-from typing import List, Optional, Dict, Any
+from typing import List, Optional, Dict, Any, Tuple
 import requests
 from models import GpuType, Pod
 
@@ -204,7 +204,7 @@ class RunpodClient:
         }
         self._send_request(mutation, variables)
 
-    def get_balance(self) -> float:
+    def get_balance(self) -> Tuple[float | None, float | None]:
         query = """
                     query getMyself {  
                         myself {
@@ -258,5 +258,7 @@ class RunpodClient:
                 """
 
         response = self._send_request(query)
-        balance = response.get('data', {}).get('myself', {}).get('clientBalance', [])
-        return balance
+        myself = response.get('data', {}).get('myself', {})
+        balance = myself.get('clientBalance', [])
+        rate = myself.get('currentSpendPerHr', [])
+        return balance, rate
